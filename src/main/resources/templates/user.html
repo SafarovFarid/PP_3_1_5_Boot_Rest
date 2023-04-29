@@ -1,11 +1,37 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title>Spring Security Example</title>
+    <title>User information Page</title>
 </head>
 <body>
-<h1>User, welcome spring boot security page!</h1>
-
+<a th:href="@{/logout}">Logout</a>
+<br><br>
+<a th:href="@{/admin}">Admin panel</a>
+<br><br>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>FIRST NAME</th>
+        <th>LAST NAME</th>
+        <th>AGE</th>
+        <th>EMAIL</th>
+        <th>ROLES</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td th:text="${user.getId()}">VALUE</td>
+        <td th:text="${user.getFirstName()}">VALUE</td>
+        <td th:text="${user.getLastName()}">VALUE</td>
+        <td th:text="${user.getAge()}">VALUE</td>
+        <td th:text="${user.getUserName()}">VALUE</td>
+        <td> <span th:each="userRole : ${user.getRoles()}">
+                <p th:text="${userRole.getRole()}">VALUE</p> </td>
+        </span>
+    </tr>
+    </tbody>
+</table>
 
 </body>
 </html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<a th:href="@{/logout}">Logout</a>
+<br><br>
+<a th:href="@{/user}">User panel</a>
+<br><br>
+<h2>Users</h2>
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>FIRST NAME</th>
+    <th>LAST NAME</th>
+    <th>AGE</th>
+    <th>EMAIL</th>
+    <th>ROLES</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="user : ${users}">
+    <td th:text="${user.getId()}">VALUE</td>
+    <td th:text="${user.getFirstName()}">VALUE</td>
+    <td th:text="${user.getLastName()}">VALUE</td>
+    <td th:text="${user.getAge()}">VALUE</td>
+    <td th:text="${user.getUserName()}">VALUE</td>
+    <td> <span th:each="userRole : ${user.getRoles()}">
+                <p th:text="${userRole.getRole()}">VALUE</p> </td>
+  </span>
+    <td>
+      <a th:href="@{/admin/update/{id}(id=${user.id})}">Update</a>
+    <a th:href="@{/admin/delete/{id}(id=${user.id})}">Delete</a>
+    </td>
+
+  </tr>
+
+  </tbody>
+</table>
+</div>
+<p><a href="/admin/addNewUser">Create user</a></p>
+</div>
+</body>
+</html>
