@@ -6,8 +6,10 @@
 <body>
 <a th:href="@{/logout}">Logout</a>
 <br><br>
+<div sec:authorize="hasRole('ADMIN')">
 <a th:href="@{/admin}">Admin panel</a>
 <br><br>
+</div>
 <table>
     <thead>
     <tr>
