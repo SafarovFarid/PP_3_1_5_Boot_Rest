@@ -29,11 +29,14 @@
     <td th:text="${user.getAge()}">VALUE</td>
     <td th:text="${user.getUserName()}">VALUE</td>
     <td> <span th:each="userRole : ${user.getRoles()}">
-                <p th:text="${userRole.getRole()}">VALUE</p> </td>
-  </span>
+                <p th:text="${userRole.getRole()}">VALUE</p>
+    </span>
+    </td>
     <td>
       <a th:href="@{/admin/update/{id}(id=${user.id})}">Update</a>
-    <a th:href="@{/admin/delete/{id}(id=${user.id})}">Delete</a>
+    <form th:action="@{/admin/delete/{id}(id=${user.id})}" th:method="DELETE">
+      <input type="submit" value="Delete"/>
+    </form>
     </td>
 
   </tr>

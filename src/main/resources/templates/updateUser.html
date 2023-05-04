@@ -5,7 +5,7 @@
     <title>Update</title>
 </head>
 <body>
-<form th:action="@{/admin/updateUser}" th:object="${user}" method="post">
+<form th:action="@{/admin/updateUser}" th:object="${user}" th:method="PUT">
 
   <label for="id">ID Only for read</label>
   <input type="number" th:field="*{id}" id="id" readonly>
