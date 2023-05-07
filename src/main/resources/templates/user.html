@@ -2,38 +2,69 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <title>User information Page</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
-<a th:href="@{/logout}">Logout</a>
-<br><br>
-<div sec:authorize="hasRole('ADMIN')">
-<a th:href="@{/admin}">Admin panel</a>
-<br><br>
+<div class="col-12 p-3 bg-dark text-white">
+    <a class="h5 font-weight-bold" th:text="${user.getUserName()}">Email</a>
+    <a class="h5">with roles:</a>
+    <a th:each="role : ${user.getRoles()}">
+        <a class="h5" th:text="${role.getRole().substring(5)}">Roles</a>
+    </a>
+    <a class="h6 float-right text-secondary" href="/logout">Logout</a>
 </div>
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>FIRST NAME</th>
-        <th>LAST NAME</th>
-        <th>AGE</th>
-        <th>EMAIL</th>
-        <th>ROLES</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr>
-        <td th:text="${user.getId()}">VALUE</td>
-        <td th:text="${user.getFirstName()}">VALUE</td>
-        <td th:text="${user.getLastName()}">VALUE</td>
-        <td th:text="${user.getAge()}">VALUE</td>
-        <td th:text="${user.getUserName()}">VALUE</td>
-        <td> <span th:each="userRole : ${user.getRoles()}">
-                <p th:text="${userRole.getRole()}">VALUE</p> </td>
-        </span>
-    </tr>
-    </tbody>
-</table>
+<div class="container-fluid bg-light">
+    <div class="row">
+        <div class="bg-white min-vh-100 prim mt-3" style="width: 220px; padding-left: 0;padding-right: 0">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')">
+                    <a class="nav-link"
+                       href="/admin">Admin</a>
+                </li>
+                <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'USER')">
+                    <a class="nav-link bg-primary text-white"
+                       href="/user">User</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col bg-light mt-3">
+            <div class="container-fluid">
+                <h1 style="margin-bottom: 20px">User information-page</h1>
 
+                <div class="card">
+                    <h5 class="card-header">About user</h5>
+                    <div class="card-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">First Name</th>
+                                <th scope="col">Last Name</th>
+                                <th scope="col">Age</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Role</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td th:utext="${user.getId()}"></td>
+                                <td th:utext="${user.getFirstName()}"></td>
+                                <td th:utext="${user.getLastName()}"></td>
+                                <td th:utext="${user.getAge()}"></td>
+                                <td th:utext="${user.getUserName()}"></td>
+                                <td>
+                                    <a th:each="role : ${user.getRoles()}">
+                                        <a th:text="${role.getRole().substring(5)}">Roles</a>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>

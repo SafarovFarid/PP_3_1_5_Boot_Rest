@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,19 +27,16 @@ public class AdminController {
     }
 
     @GetMapping("/admin")
-    public String admin(Model model) {
+    public String admin(@AuthenticationPrincipal User activeUser, Model model) {
         model.addAttribute("users",userService.getAllUsers());
+        model.addAttribute("user", activeUser);
+        model.addAttribute("newUser", new User());
         return "admin";
     }
 
-    @GetMapping("/admin/addNewUser")
-    public String addNewUser(Model model) {
-        model.addAttribute("user", new User());
-        return "addNewUser";
-    }
 
     @PostMapping("/admin/createUser")
-    public String create(@ModelAttribute("user") User user, @RequestParam("listRoleId") List<String> roles) {
+    public String create(@ModelAttribute("user") User user, @RequestParam("newListRoleId") List<String> roles) {
         Set<Role> userRole = new HashSet<>();
         for (String roleId : roles) {
             Role role = roleService.getRoleById(Long.parseLong(roleId));
@@ -49,15 +47,9 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/admin/update/{id}")
-    public String addNewUser(@PathVariable(name = "id") long id, Model model) {
-        User user = userService.getById(id);
-        model.addAttribute("user", user);
-        return "updateUser";
-    }
 
     @PutMapping("/admin/updateUser")
-    public String update(@ModelAttribute("user") User user, @RequestParam("listRoleId") List<String> roles) {
+    public String update(@ModelAttribute("user") User user, @RequestParam("newListRoleId") List<String> roles) {
         Set<Role> userRole = new HashSet<>();
         for (String roleId : roles) {
             Role role = roleService.getRoleById(Long.parseLong(roleId));
@@ -67,10 +59,10 @@ public class AdminController {
         userService.update(user);
         return "redirect:/admin";
     }
-
-    @DeleteMapping("/admin/delete/{id}")
-    public String delete(@PathVariable(name = "id") long id) {
-        userService.delete(id);
+    @DeleteMapping("/admin/delete")
+    public String delete(@ModelAttribute("user") User user) {
+        userService.delete(user.getId());
         return "redirect:/admin";
     }
+
 }
