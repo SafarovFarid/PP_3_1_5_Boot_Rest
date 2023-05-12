@@ -27,7 +27,7 @@
                     <a class="nav-link active" aria-current="page" href="/admin">Admin</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/user">User</a>
+                    <a class="nav-link">User</a>
                 </li>
             </ul>
         </div>
@@ -92,29 +92,29 @@
                                     <div class="col-3 text-center">
                                         <form id="formForNewUser" method="post">
                                             <div class="mb-3">
-                                            <label class="font-weight-bold" for="newfirstName">FIRST NAME</label>
-                                            <input type="text" class="form-control" id="newfirstName">
+                                            <label class="font-weight-bold" for="newUserFirstName">FIRST NAME</label>
+                                            <input type="text" class="form-control" id="newUserFirstName">
                                             </div>
                                             <div class="mb-3">
-                                            <label class="font-weight-bold" for="newlastName">LAST NAME</label>
-                                            <input type="text" class="form-control" id="newlastName">
+                                            <label class="font-weight-bold" for="newUserLastName">LAST NAME</label>
+                                            <input type="text" class="form-control" id="newUserLastName">
                                             </div>
                                             <div class="mb-3">
-                                            <label class="font-weight-bold" for="newAge">AGE</label>
-                                            <input type="number" class="form-control" id="newAge">
+                                            <label class="font-weight-bold" for="newUserAge">AGE</label>
+                                            <input type="number" class="form-control" id="newUserAge">
                                             </div>
                                             <div class="mb-3">
-                                            <label class="font-weight-bold" for="newUserName">EMAIL</label>
-                                            <input type="text" class="form-control" id="newUserName">
+                                            <label class="font-weight-bold" for="newUserEmail">EMAIL</label>
+                                            <input type="text" class="form-control" id="newUserEmail">
                                             </div>
                                             <div class="mb-3">
-                                            <label class="font-weight-bold" for="newPassword">PASSWORD</label>
-                                            <input type="text" class="form-control" id="newPassword" placeholder="PASSWORD">
+                                            <label class="font-weight-bold" for="newUserPassword">PASSWORD</label>
+                                            <input type="text" class="form-control" id="newUserPassword" placeholder="PASSWORD">
                                             </div>
                                             <div class="mb-3">
-                                            <select id="roles" multiple size="2" name="newListRoleId" required class="form-control form-control-sm">
-                                                <option value="1">ROLE_ADMIN</option>
-                                                <option selected="selected" value="2">ROLE_USER</option>
+                                            <select id="newUserRoles" multiple size="2" name="newListRoleId" required class="form-control form-control-sm">
+                                                <option value="1">ADMIN</option>
+                                                <option selected="selected" value="2">USER</option>
                                             </select>
                                             </div>
 
@@ -242,7 +242,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-danger">Delete</button>
+                <button type="submit" class="btn btn-danger" id="deleteUser">Delete</button>
             </div>
         </div>
     </div>

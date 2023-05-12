@@ -23,14 +23,19 @@ public class RestApiController {
         this.roleService = roleService;
     }
 
-    @GetMapping("admin/json")
+    @GetMapping("/api/admin")
     public List<User> admin() {
         return userService.getAllUsers();
     }
-
-    @PostMapping("json/newAddUser")
+    @PostMapping("/api/admin/create")
     public void saveNewUser(@RequestBody User user) {
         userService.create(user);
+    }
+
+
+    @DeleteMapping("/api/admin/delete/{id}")
+    public void delete(@PathVariable long id) {
+        userService.delete(id);
     }
 
 }

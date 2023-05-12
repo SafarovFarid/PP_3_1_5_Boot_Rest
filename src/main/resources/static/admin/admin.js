@@ -1,127 +1,136 @@
-const url = 'admin/json'
-const user = fetch(url)
-    .then(data => data.json())
-    .then(json => table(json))
+const url = 'http://localhost:8080/api/admin';
+const renderTable = document.getElementById("table");
+const addForm = document.getElementById("create");
 
-const modalEdit = new bootstrap.Modal(document.getElementById('editModal'));
+
+
+
 const modalDelete = new bootstrap.Modal(document.getElementById('deleteModal'));
 
-const tableid = document.getElementById('table');
-
-const idfield = document.getElementById('id-field');
-const first = document.getElementById('first-name');
-const last = document.getElementById('last-name');
-const a = document.getElementById('age');
-const e = document.getElementById('email');
-
-const idfielddel = document.getElementById('id-field-del');
-const firstnamedel = document.getElementById('first-name-del');
-const lastnamedel = document.getElementById('last-name-del');
-const agedel = document.getElementById('age-del');
-const emaildel = document.getElementById('email-del');
-
-const form_new = document.getElementById('formForNewUser');
-const role_new = document.getElementById('roles').selectedOptions;
 
 
-
+//Все пользователи
 const table = (data) => {
-    let temp = "";
+    let temp = '';
     data.forEach((user) => {
+        let roles = user.roles.map(name => name.role.slice(5)).join(' ');
         temp += "<tr>";
         temp += "<td>" + user.id + "</td>";
         temp += "<td>" + user.firstName + "</td>";
         temp += "<td>" + user.lastName + "</td>";
         temp += "<td>" + user.age + "</td>";
-        temp += "<td>" + user.userName + "</td><td>";
-        for (let i = 0; i < user.roles.length; i++){
-            if (i >= 1) {
-                temp += ", ";
-            }
-            temp += user.roles[i].role.slice(5);
-        }
-        temp += "<td><button class=\"btn btn-info\" id='edit' data-toggle=\"modal\" data-userid ='" + user.id + "' data-firstName ='" + user.firstName + "' data-lastName ='" + user.lastName + "' data-age ='" + user.age + "' data-email ='" + user.userName + "'>Edit</button></td>";
-        temp += "<td><button class=\"btn btn-danger\" id='delete' data-toggle=\"modal\" data-userid ='" + user.id + "' data-firstName ='" + user.firstName + "' data-lastName ='" + user.lastName + "' data-age ='" + user.age + "' data-email ='" + user.userName + "'>Delete</button></td>";
+        temp += "<td>" + user.userName + "</td>";
+        temp += "<td>" + roles +"</td>"
+        temp += "<td><button class=\"btn btn-info\" id='edit' data-toggle=\"modal\" data-userid ='"
+            + user.id + "' data-firstName ='" + user.firstName + "' data-lastName ='"
+            + user.lastName + "' data-age ='" + user.age + "' data-email ='"
+            + user.userName + "'>Edit</button></td>";
+        temp += "<td><button class=\"btn btn-danger\" id='delete' data-toggle=\"modal\" data-userid ='"
+            + user.id + "' data-firstName ='" + user.firstName + "' data-lastName ='" + user.lastName + "' data-age ='"
+            + user.age + "' data-email ='" + user.userName + "'>Delete</button></td></tr>";
     })
-    temp += "</tr>";
-    tableid.innerHTML = temp;
+    renderTable.innerHTML = temp;
 
-    const buttons = document.querySelectorAll('.btn');
-
-    buttons.forEach(button => {
+    document.querySelectorAll(".btn").forEach(button => {
         button.addEventListener('click', handleClick)
     })
 
+    document.getElementById("newUserFirstName").value = '';
+    document.getElementById("newUserLastName").value = '';
+    document.getElementById("newUserAge").value = '';
+    document.getElementById("newUserEmail").value = '';
+    document.getElementById("newUserPassword").value = '';
+}
+
+function getAllUsers() {
+    fetch(url)
+        .then(api => api.json())
+        .then(data => table(data))
+}
+
+getAllUsers();
+
+// Добавление нового пользователя
+
+addForm.addEventListener('click', () => {
+    const addUrl = "http://localhost:8080/api/admin/create"
+    let nameValue = document.getElementById("newUserFirstName").value;
+    let lastNameValue = document.getElementById("newUserLastName").value;
+    let ageValue = document.getElementById("newUserAge").value;
+    let emailValue = document.getElementById("newUserEmail").value;
+    let passwordValue = document.getElementById("newUserPassword").value;
+    let roles = getRoles(Array.from(document.getElementById("newUserRoles").selectedOptions)
+        .map(role => role.value));
+    let newUser = {
+        firstName: nameValue,
+        lastName: lastNameValue,
+        age: ageValue,
+        userName: emailValue,
+        password: passwordValue,
+        roles: roles
+    }
+    fetch(addUrl, {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json;charset=UTF-8'
+        },
+        body: JSON.stringify(newUser)
+    }).then(() => getAllUsers())
+})
+
+function getRoles(rols) {
+    let roles = [];
+    if (rols.indexOf("1") >= 0) {
+        roles.push({
+            "id": 1,
+            "name": "ROLE_ADMIN",
+            "users": null,
+            "authority": "ROLE_ADMIN"
+        });
+    }
+    if (rols.indexOf("2") >= 0) {
+        roles.push({
+            "id": 2,
+            "name": "ROLE_USER",
+            "users": null,
+            "authority": "ROLE_USER"
+        });
+    }
+    return roles;
+}
+
+
+let deleteUrl = '';
+document.getElementById("deleteUser").addEventListener('click',() => deleteForm(deleteUrl));
+function deleteForm (d) {
+    fetch(d, {
+        method: "DELETE",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json;charset=UTF-8'
+        },
+    }).then(data => console.log(data))
+        .then(() => getAllUsers())
+        .then(() => modalDelete.hide())
 
 }
+
+
 
 const handleClick = (event) => {
-    let editButtonPressed = event.target.id === 'edit';
-    let deleteButtonPressed = event.target.id === 'delete';
-    let createButtonPressed = event.target.id === 'create';
 
-    let userid = event.target.dataset.userid;
-    let firstname = event.target.dataset.firstname;
-    let lastname = event.target.dataset.lastname;
-    let age = event.target.dataset.age;
-    let email = event.target.dataset.email;
-
-
-    if (editButtonPressed) {
-        modalEdit.show();
-
-        idfield.value = userid;
-        first.value = firstname;
-        last.value = lastname;
-        a.value = age;
-        e.value = email;
-
-    }
-
-    if (deleteButtonPressed) {
+    //Удаление пользователя
+    if(event.target.id === 'delete') {
         modalDelete.show();
-
-        idfielddel.value = userid;
-        firstnamedel.value = firstname;
-        lastnamedel.value = lastname;
-        agedel.value = age;
-        emaildel.value = email;
-    }
-
-    if (createButtonPressed) {
-        let listOfRole = [];
-        for (let i = 0; i < role_new.length; i++) {
-            listOfRole.push({
-                id:role_new[i].value
-            });
-        }
-        const res = fetch ("json/newAddUser" , {
-            method: 'POST',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                firstName: form_new.newfirstName.value,
-                lastName: form_new.newlastName.value,
-                age: form_new.newAge.value,
-                userName: form_new.newUserName.value,
-                password: form_new.newPassword.value,
-                roles: listOfRole
-            })
-        })
+        deleteUrl = 'api/admin/delete/' + event.target.dataset.userid;
+        document.getElementById("id-field-del").value = event.target.dataset.userid;
+        document.getElementById("first-name-del").value = event.target.dataset.firstName;
+        document.getElementById("last-name-del").value = event.target.dataset.lastName;
+        document.getElementById("age-del").value = event.target.dataset.age;
+        document.getElementById("email-del").value = event.target.dataset.email;
     }
 
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
