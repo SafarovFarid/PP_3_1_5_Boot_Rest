@@ -6,6 +6,8 @@ const addForm = document.getElementById("create");
 
 
 const modalDelete = new bootstrap.Modal(document.getElementById('deleteModal'));
+const modalEdit = new bootstrap.Modal(document.getElementById('editModal'));
+
 
 
 
@@ -24,7 +26,7 @@ const table = (data) => {
         temp += "<td><button class=\"btn btn-info\" id='edit' data-toggle=\"modal\" data-userid ='"
             + user.id + "' data-firstName ='" + user.firstName + "' data-lastName ='"
             + user.lastName + "' data-age ='" + user.age + "' data-email ='"
-            + user.userName + "'>Edit</button></td>";
+            + user.userName + "' data-password ='" + user.password + "'>Edit</button></td>";
         temp += "<td><button class=\"btn btn-danger\" id='delete' data-toggle=\"modal\" data-userid ='"
             + user.id + "' data-firstName ='" + user.firstName + "' data-lastName ='" + user.lastName + "' data-age ='"
             + user.age + "' data-email ='" + user.userName + "'>Delete</button></td></tr>";
@@ -40,6 +42,8 @@ const table = (data) => {
     document.getElementById("newUserAge").value = '';
     document.getElementById("newUserEmail").value = '';
     document.getElementById("newUserPassword").value = '';
+    document.getElementById("password").value='';
+
 }
 
 function getAllUsers() {
@@ -76,6 +80,7 @@ addForm.addEventListener('click', () => {
         },
         body: JSON.stringify(newUser)
     }).then(() => getAllUsers())
+        .then(() => document.getElementById("usersTableButton").click())
 })
 
 function getRoles(rols) {
@@ -99,6 +104,7 @@ function getRoles(rols) {
     return roles;
 }
 
+//Удаление пользователя
 
 let deleteUrl = '';
 document.getElementById("deleteUser").addEventListener('click',() => deleteForm(deleteUrl));
@@ -109,14 +115,79 @@ function deleteForm (d) {
             'Accept': 'application/json',
             'Content-Type': 'application/json;charset=UTF-8'
         },
-    }).then(data => console.log(data))
-        .then(() => getAllUsers())
+    }).then(() => getAllUsers())
         .then(() => modalDelete.hide())
+
+}
+
+//Редактирование пользователя
+const editUrl = '/api/admin/updateUser';
+document.getElementById("editUser").addEventListener('click',() => editForm(editUrl));
+function editForm (e) {
+    let idValue = document.getElementById("id-field").value;
+    let nameValue = document.getElementById("first-name").value;
+    let lastNameValue = document.getElementById("last-name").value;
+    let ageValue = document.getElementById("age").value;
+    let emailValue = document.getElementById("email").value;
+    let passwordValue = document.getElementById("password").value;
+    let roles = getRoles(Array.from(document.getElementById("userRoles").selectedOptions)
+        .map(role => role.value));
+
+
+    if (passwordValue === '') {
+        let userUrs = "/api/admin/" + idValue;
+        fetch(userUrs)
+            .then(api => api.json())
+            .then(data => data.password)
+            .then(password => {
+                let user = {
+                    id : idValue,
+                    firstName: nameValue,
+                    lastName: lastNameValue,
+                    age: ageValue,
+                    userName: emailValue,
+                    password: password,
+                    roles: roles
+                }
+                return user;
+            })
+            .then(user => fetch(e, {
+                method: "PUT",
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json;charset=UTF-8'
+                },
+                body: JSON.stringify(user)
+            }).then(() => modalEdit.hide())
+                .then(() => getAllUsers()))
+
+    } else {
+        let user = {
+            id : idValue,
+            firstName: nameValue,
+            lastName: lastNameValue,
+            age: ageValue,
+            userName: emailValue,
+            password: passwordValue,
+            roles: roles
+        }
+        fetch(e, {
+            method: "PUT",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json;charset=UTF-8'
+            },
+            body: JSON.stringify(user)
+        }).then(() => modalEdit.hide())
+            .then(() => getAllUsers())
+    }
+
 
 }
 
 
 
+//Открытие модальных окон
 const handleClick = (event) => {
 
     //Удаление пользователя
@@ -124,10 +195,20 @@ const handleClick = (event) => {
         modalDelete.show();
         deleteUrl = 'api/admin/delete/' + event.target.dataset.userid;
         document.getElementById("id-field-del").value = event.target.dataset.userid;
-        document.getElementById("first-name-del").value = event.target.dataset.firstName;
-        document.getElementById("last-name-del").value = event.target.dataset.lastName;
+        document.getElementById("first-name-del").value = event.target.dataset.firstname;
+        document.getElementById("last-name-del").value = event.target.dataset.lastname;
         document.getElementById("age-del").value = event.target.dataset.age;
         document.getElementById("email-del").value = event.target.dataset.email;
+    }
+
+    //Редактирование пользователя
+    if(event.target.id === 'edit') {
+        modalEdit.show();
+        document.getElementById("id-field").value = event.target.dataset.userid;
+        document.getElementById("first-name").value = event.target.dataset.firstname;
+        document.getElementById("last-name").value = event.target.dataset.lastname;
+        document.getElementById("age").value = event.target.dataset.age;
+        document.getElementById("email").value = event.target.dataset.email;
     }
 
 }

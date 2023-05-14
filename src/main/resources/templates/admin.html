@@ -4,125 +4,161 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <title>Admin page</title>
 </head>
 <body>
-<div class="col-12 p-3 bg-dark text-white">
+<nav class="col-12 p-3 bg-dark text-white">
     <a class="h5 font-weight-bold" th:text="${user.getUserName()}">Email</a>
     <a class="h5">with roles:</a>
     <a th:each="role : ${user.getRoles()}">
         <a class="h5" th:text="${role.getRole().substring(5)}">Roles</a>
     </a>
     <a class="h6 float-right text-secondary" href="/logout">Logout</a>
-</div>
+</nav>
+
 <div class="container-fluid bg-light">
     <div class="row">
-        <div class="bg-white min-vh-100 prim mt-3" style="width: 220px; padding-left: 0;padding-right: 0">
-            <ul class="nav nav-pills flex-column">
+        <div class="col-2">
+            <ul class="nav nav-tabs flex-column nav-pills" id="myTabTable" role="tablist">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/admin">Admin</a>
+                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Admin</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link">User</a>
+                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">User</a>
                 </li>
             </ul>
         </div>
-        <div class="col bg-light mt-3">
-            <div class="container-fluid">
-                <h1 style="margin-bottom: 20px">Admin panel</h1>
-                <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item">
-                        <a class="nav-link active" data-toggle="tab" href="#usersTable" role="tab">Users table</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" data-toggle="tab" href="#newUser" role="tab">New User</a>
-                    </li>
-                </ul>
-                <div class="tab-content">
-                    <div class="tab-pane active" id="usersTable">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th scope="col">ID</th>
-                                <th scope="col">First Name</th>
-                                <th scope="col">Last Name</th>
-                                <th scope="col">Age</th>
-                                <th scope="col">Email</th>
-                                <th scope="col">Role</th>
-                                <th scope="col">Edit</th>
-                                <th scope="col">Delete</th>
-                            </tr>
-                            </thead>
-                            <tbody id="table">
-                            <!--
-                            <tr th:each="user : ${users}">
-                                <td th:text="${user.getId()}">VALUE</td>
-                                <td th:text="${user.getFirstName()}">VALUE</td>
-                                <td th:text="${user.getLastName()}">VALUE</td>
-                                <td th:text="${user.getAge()}">VALUE</td>
-                                <td th:text="${user.getUserName()}">VALUE</td>
-                                <td> <span th:each="userRole : ${user.getRoles()}">
-                                    <p th:text="${userRole.getRole().substring(5)}">VALUE</p>
-                                </span>
-                                </td>
+        <div class="col-10">
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <h1 style="margin-bottom: 20px">Admin panel</h1>
+                    <ul class="nav nav-tabs" id="myTab" role="tablist">
+                        <li class="nav-item">
+                            <a class="nav-link active" id="usersTableButton" data-toggle="tab" href="#usersTable" role="tab">Users table</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" data-toggle="tab" href="#newUser" role="tab">New User</a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="usersTable">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">First Name</th>
+                                    <th scope="col">Last Name</th>
+                                    <th scope="col">Age</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Role</th>
+                                    <th scope="col">Edit</th>
+                                    <th scope="col">Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody id="table">
+                                <!--
+                                <tr th:each="user : ${users}">
+                                    <td th:text="${user.getId()}">VALUE</td>
+                                    <td th:text="${user.getFirstName()}">VALUE</td>
+                                    <td th:text="${user.getLastName()}">VALUE</td>
+                                    <td th:text="${user.getAge()}">VALUE</td>
+                                    <td th:text="${user.getUserName()}">VALUE</td>
+                                    <td> <span th:each="userRole : ${user.getRoles()}">
+                                        <p th:text="${userRole.getRole().substring(5)}">VALUE</p>
+                                    </span>
+                                    </td>
 
 
-                                <td>
-                                    <input type="button" class="btn btn-info" data-toggle="modal" data-target="#editModal" th:data-userid="${user.id}" th:data-firstname="${user.firstName}" th:data-lastname="${user.lastName}" th:data-age="${user.age}" th:data-email="${user.userName}"  th:data-roles="${user.roles}" value="Edit"/>
-                                </td>
-                                <td>
-                                    <input type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" th:data-userid="${user.id}" th:data-firstname="${user.firstName}" th:data-lastname="${user.lastName}" th:data-age="${user.age}" th:data-email="${user.userName}" th:data-roles="${user.roles}" value="Delete"/>
-                                </td>
+                                    <td>
+                                        <input type="button" class="btn btn-info" data-toggle="modal" data-target="#editModal" th:data-userid="${user.id}" th:data-firstname="${user.firstName}" th:data-lastname="${user.lastName}" th:data-age="${user.age}" th:data-email="${user.userName}"  th:data-roles="${user.roles}" value="Edit"/>
+                                    </td>
+                                    <td>
+                                        <input type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" th:data-userid="${user.id}" th:data-firstname="${user.firstName}" th:data-lastname="${user.lastName}" th:data-age="${user.age}" th:data-email="${user.userName}" th:data-roles="${user.roles}" value="Delete"/>
+                                    </td>
 
 
-                            </tr>
-                            -->
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="tab-pane fade" id="newUser">
-                        <div class="card">
-                            <h5 class="card-header">Add new user</h5>
-                            <div class="card-body">
-                                <div class="d-flex justify-content-center">
-                                    <div class="col-3 text-center">
-                                        <form id="formForNewUser" method="post">
-                                            <div class="mb-3">
-                                            <label class="font-weight-bold" for="newUserFirstName">FIRST NAME</label>
-                                            <input type="text" class="form-control" id="newUserFirstName">
-                                            </div>
-                                            <div class="mb-3">
-                                            <label class="font-weight-bold" for="newUserLastName">LAST NAME</label>
-                                            <input type="text" class="form-control" id="newUserLastName">
-                                            </div>
-                                            <div class="mb-3">
-                                            <label class="font-weight-bold" for="newUserAge">AGE</label>
-                                            <input type="number" class="form-control" id="newUserAge">
-                                            </div>
-                                            <div class="mb-3">
-                                            <label class="font-weight-bold" for="newUserEmail">EMAIL</label>
-                                            <input type="text" class="form-control" id="newUserEmail">
-                                            </div>
-                                            <div class="mb-3">
-                                            <label class="font-weight-bold" for="newUserPassword">PASSWORD</label>
-                                            <input type="text" class="form-control" id="newUserPassword" placeholder="PASSWORD">
-                                            </div>
-                                            <div class="mb-3">
-                                            <select id="newUserRoles" multiple size="2" name="newListRoleId" required class="form-control form-control-sm">
-                                                <option value="1">ADMIN</option>
-                                                <option selected="selected" value="2">USER</option>
-                                            </select>
-                                            </div>
-
-                                            <button type="button" id="create" class="btn btn-outline-secondary">Add new user</button>
-                                        </form>
+                                </tr>
+                                -->
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="newUser">
+                            <div class="card">
+                                <h5 class="card-header">Add new user</h5>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-center">
+                                        <div class="col-3 text-center">
+                                            <form id="formForNewUser" method="post">
+                                                <div class="mb-3">
+                                                    <label class="font-weight-bold" for="newUserFirstName">FIRST NAME</label>
+                                                    <input type="text" class="form-control" id="newUserFirstName">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="font-weight-bold" for="newUserLastName">LAST NAME</label>
+                                                    <input type="text" class="form-control" id="newUserLastName">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="font-weight-bold" for="newUserAge">AGE</label>
+                                                    <input type="number" class="form-control" id="newUserAge">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="font-weight-bold" for="newUserEmail">EMAIL</label>
+                                                    <input type="text" class="form-control" id="newUserEmail">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label class="font-weight-bold" for="newUserPassword">PASSWORD</label>
+                                                    <input type="text" class="form-control" id="newUserPassword" placeholder="PASSWORD">
+                                                </div>
+                                                <div class="mb-3">
+                                                    <select id="newUserRoles" multiple size="2" name="newListRoleId" required class="form-control form-control-sm">
+                                                        <option value="1">ADMIN</option>
+                                                        <option value="2">USER</option>
+                                                    </select>
+                                                </div>
+                                                <button type="button" id="create" class="btn btn-outline-secondary">Add new user</button>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                        <h1 style="margin-bottom: 20px">User information-page</h1>
+                    <div class="card">
+                        <h5 class="card-header">About user</h5>
+                        <div class="card-body">
+                            <table class="table table-striped">
+                                <thead>
+                                <tr>
+                                    <th scope="col">ID</th>
+                                    <th scope="col">First Name</th>
+                                    <th scope="col">Last Name</th>
+                                    <th scope="col">Age</th>
+                                    <th scope="col">Email</th>
+                                    <th scope="col">Role</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td th:utext="${user.getId()}"></td>
+                                    <td th:utext="${user.getFirstName()}"></td>
+                                    <td th:utext="${user.getLastName()}"></td>
+                                    <td th:utext="${user.getAge()}"></td>
+                                    <td th:utext="${user.getUserName()}"></td>
+                                    <td>
+                                        <a th:each="role : ${user.getRoles()}">
+                                            <a th:text="${role.getRole().substring(5)}">Roles</a>
+                                        </a>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -130,14 +166,6 @@
         </div>
     </div>
 </div>
-</div>
-
-
-
-
-
-
-
 
 
 <!-- Edit User-->
@@ -181,19 +209,21 @@
                     <input type="password" class="form-control" id="password" name="password" placeholder="Enter new password if necessary">
                 </div>
                 <div>
-                    <select multiple size="2" name="newListRoleId" required class="form-control form-control-sm">
-                        <option value="1">ROLE_ADMIN</option>
-                        <option selected="selected" value="2">ROLE_USER</option>
+                    <select id="userRoles" multiple size="2" name="newListRoleId" required class="form-control form-control-sm">
+                        <option value="1" >ADMIN</option>
+                        <option value="2" >USER</option>
                     </select>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="submit" class="btn btn-primary" id="editUser">Save</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- Delete User-->
 
 <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -250,54 +280,9 @@
 
 
 
-
-<!-- Optional JavaScript -->
-<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-
-<!--<script>
-    $('#editModal').on('show.bs.modal', function (event) {
-        let button = $(event.relatedTarget)
-        let modal = $(this);
-        let userid = button.data('userid');
-        let firstname = button.data('firstname');
-        let lastname = button.data('lastname');
-        let age = button.data('age');
-        let email = button.data('email');
-        let roles = button.data('newListRoleId');
-
-        modal.find('#id-field').val(userid);
-        modal.find('#first-name').val(firstname);
-        modal.find('#last-name').val(lastname);
-        modal.find('#age').val(age);
-        modal.find('#email').val(email);
-        modal.find('#roles').val(roles);
-
-    })
-</script>
-
-<script>
-    $('#deleteModal').on('show.bs.modal', function (event) {
-        let button = $(event.relatedTarget)
-        let modal = $(this);
-        let userid = button.data('userid');
-        let firstname = button.data('firstname');
-        let lastname = button.data('lastname');
-        let age = button.data('age');
-        let email = button.data('email');
-
-
-        modal.find('#id-field-del').val(userid);
-        modal.find('#first-name-del').val(firstname);
-        modal.find('#last-name-del').val(lastname);
-        modal.find('#age-del').val(age);
-        modal.find('#email-del').val(email);
-
-
-    })
-</script>-->
 
 <script th:src="@{/admin/admin.js}"></script>
 

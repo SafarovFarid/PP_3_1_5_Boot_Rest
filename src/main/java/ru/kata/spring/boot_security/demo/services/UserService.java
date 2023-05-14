@@ -7,11 +7,12 @@ import java.util.List;
 
 
 public interface UserService {
+
     List<User> getAllUsers();
 
     void create(User user);
 
-    User getById (long id);
+    User findById(long id);
 
     void update(User user);
 

@@ -28,14 +28,12 @@ public class AdminController {
 
     @GetMapping("/admin")
     public String admin(@AuthenticationPrincipal User activeUser, Model model) {
-        model.addAttribute("users",userService.getAllUsers());
         model.addAttribute("user", activeUser);
-        model.addAttribute("newUser", new User());
         return "admin";
     }
 
 
-    @PostMapping("/admin/createUser")
+/*    @PostMapping("/admin/createUser")
     public String create(@ModelAttribute("user") User user, @RequestParam("newListRoleId") List<String> roles) {
         Set<Role> userRole = new HashSet<>();
         for (String roleId : roles) {
@@ -63,6 +61,6 @@ public class AdminController {
     public String delete(@ModelAttribute("user") User user) {
         userService.delete(user.getId());
         return "redirect:/admin";
-    }
+    }*/
 
 }
